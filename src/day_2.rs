@@ -63,11 +63,7 @@ impl Puzzle for Day2 {
     }
     fn part_b(data: String) -> String {
         data.lines()
-            .filter(|x| {
-                let is_safe = line_is_safe(x, true);
-                println!("{x} -> {is_safe}");
-                is_safe
-            })
+            .filter(|x| line_is_safe(x, true))
             .count()
             .to_string()
     }

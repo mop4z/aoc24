@@ -5,20 +5,10 @@ use crate::Puzzle;
 pub struct Day1;
 
 fn get_lists(data: String) -> (Vec<i32>, Vec<i32>) {
-    let mut left: Vec<i32> = vec![];
-    let mut right: Vec<i32> = vec![];
-    for mut a_b in data.lines().map(|x| x.split_whitespace()) {
-        let a = a_b.next().map(|x| x.parse());
-        let b = a_b.next().map(|x| x.parse());
-        match (a, b) {
-            (Some(Ok(a)), Some(Ok(b))) => {
-                left.push(a);
-                right.push(b);
-            }
-            _ => {}
-        }
-    }
-    (left, right)
+    data.lines()
+        .filter_map(|x| x.split_once("   "))
+        .map(|(left, right)| (left.parse::<i32>().unwrap(), right.parse::<i32>().unwrap()))
+        .unzip()
 }
 
 impl Puzzle for Day1 {
