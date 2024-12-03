@@ -13,6 +13,23 @@ fn line_is_safe(line: &str, dampener: bool) -> bool {
         .flatten()
         .collect();
     if !dampener {
+        'fail_loop: for i in 0..levels.len() {
+            let mut levels_iter = levels
+                .iter()
+                .enumerate()
+                .filter_map(|(i_, level)| (i != i_).then_some(level));
+            let mut previous = levels_iter.next().unwrap();
+            let mut direction = None;
+            for level in levels_iter {
+                if !check_level(*previous, *level, &mut direction) {
+                    continue 'fail_loop;
+                }
+                previous = level;
+            }
+            return true;
+        }
+        false
+    } else {
         let mut previous = levels[0];
         let mut direction = None;
         for level in &levels[1..] {
@@ -22,20 +39,6 @@ fn line_is_safe(line: &str, dampener: bool) -> bool {
             previous = *level;
         }
         true
-    } else {
-        'fail_loop: for i in 0..levels.len() {
-            let mut levels_iter = levels.iter().enumerate().filter(|(i_, _)| i != *i_);
-            let (_, mut previous) = levels_iter.next().unwrap();
-            let mut direction = None;
-            for (_, level) in levels_iter {
-                if !check_level(*previous, *level, &mut direction) {
-                    continue 'fail_loop;
-                }
-                previous = level;
-            }
-            return true;
-        }
-        false
     }
 }
 
