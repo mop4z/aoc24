@@ -20,24 +20,23 @@ impl Puzzle for Day3 {
             .to_string()
     }
     fn part_b(data: String) -> String {
-        let regex = Regex::new(r"do\(\)|mul\((\d+),(\d+)\)|don't\(\)").unwrap();
+        let regex = Regex::new(r"(do\(\))|mul\((\d+),(\d+)\)|(don't\(\))").unwrap();
         let mut valid = true;
         regex
             .captures_iter(&data)
             .map(|x| {
-                let m = x.get(0).unwrap().as_str();
-                if m == "do()" {
+                if x.get(1).is_some() {
                     valid = true;
-                } else if m == "don't()" {
+                } else if x.get(4).is_some() {
                     valid = false;
                 }
                 if valid {
-                    x.get(1)
+                    x.get(2)
                         .map(|x_| x_.as_str())
                         .unwrap_or_else(|| "0")
                         .parse::<i32>()
                         .unwrap()
-                        * x.get(2)
+                        * x.get(3)
                             .map(|x_| x_.as_str())
                             .unwrap_or_else(|| "0")
                             .parse::<i32>()
