@@ -109,8 +109,7 @@ impl Puzzle for Day4 {
         let mut total_count = 0;
         for y in 0..letter_grid.len() {
             for x in 0..(letter_grid[y].len()) {
-                let letter = letter_grid[y][x];
-                if letter == 'X' {
+                if letter_grid[y][x] == 'X' {
                     for direction in DIRECTIONS {
                         total_count +=
                             search_for_remaining(&letter_grid, 'M', x, y, direction) as i32;
@@ -128,26 +127,25 @@ impl Puzzle for Day4 {
         let mut total_count = 0;
         for y in 0..letter_grid.len() {
             for x in 0..(letter_grid[y].len()) {
-                let letter = letter_grid[y][x];
-                if letter == 'A' {
+                if letter_grid[y][x] == 'A' {
                     let search_cross = |locs: [(char, Direction); 2]| {
                         locs.map(|(c, d)| search(&letter_grid, c, x, y, d))
                             .iter()
                             .all(|x| *x)
                     };
-                    let left_cross =
-                        search_cross([('M', Direction::UpLeft), ('S', Direction::DownRight)])
-                            || search_cross([
-                                ('S', Direction::UpLeft),
-                                ('M', Direction::DownRight),
-                            ]);
+                    let searches =
+                        |locs_a: [(char, Direction); 2], locs_b: [(char, Direction); 2]| {
+                            search_cross(locs_a) || search_cross(locs_b)
+                        };
+                    let left_cross = searches(
+                        [('M', Direction::UpLeft), ('S', Direction::DownRight)],
+                        [('S', Direction::UpLeft), ('M', Direction::DownRight)],
+                    );
                     if left_cross {
-                        let right_cross =
-                            search_cross([('M', Direction::UpRight), ('S', Direction::DownLeft)])
-                                || search_cross([
-                                    ('S', Direction::UpRight),
-                                    ('M', Direction::DownLeft),
-                                ]);
+                        let right_cross = searches(
+                            [('M', Direction::UpRight), ('S', Direction::DownLeft)],
+                            [('S', Direction::UpRight), ('M', Direction::DownLeft)],
+                        );
                         if right_cross {
                             total_count += 1;
                         }
