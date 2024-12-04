@@ -21,16 +21,10 @@ impl Puzzle for Day3 {
     }
     fn part_b(data: String) -> String {
         let do_regex = Regex::new(r"do\(\)").unwrap();
-        let do_idxs = do_regex
-            .captures_iter(&data)
-            .flat_map(|x| x.get(0))
-            .map(|x| (x.start(), true));
+        let do_idxs = do_regex.find_iter(&data).map(|x| (x.start(), true));
 
         let dont_regex = Regex::new(r"don't\(\)").unwrap();
-        let dont_idxs = dont_regex
-            .captures_iter(&data)
-            .flat_map(|x| x.get(0))
-            .map(|x| (x.start(), false));
+        let dont_idxs = dont_regex.find_iter(&data).map(|x| (x.start(), false));
 
         let mut valid_idxs = [(0 as usize, true)]
             .into_iter()
