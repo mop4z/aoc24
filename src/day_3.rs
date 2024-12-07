@@ -32,15 +32,9 @@ impl Puzzle for Day3 {
                 }
                 if valid {
                     x.get(2)
-                        .map(|x_| x_.as_str())
-                        .unwrap_or_else(|| "0")
-                        .parse::<i32>()
-                        .unwrap()
-                        * x.get(3)
-                            .map(|x_| x_.as_str())
-                            .unwrap_or_else(|| "0")
-                            .parse::<i32>()
-                            .unwrap()
+                        .map(|x_| x_.as_str().parse::<i32>().unwrap())
+                        .and_then(|a| x.get(3).map(|x_| a * x_.as_str().parse::<i32>().unwrap()))
+                        .unwrap_or_else(|| 0)
                 } else {
                     0
                 }
